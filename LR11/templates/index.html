@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Decryptor</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        textarea, input[type="file"] { width: 100%; padding: 8px; }
+        button { background: #42b983; color: white; border: none; padding: 10px 15px; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; border: 1px solid #ddd; white-space: pre-wrap; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <h1>🔐 RSA Decryptor</h1>
+
+        <div class="form-group">
+            <label for="key">Приватный ключ (PEM):</label>
+            <input type="file" id="key" @change="handleFileUpload" accept=".pem">
+        </div>
+
+        <div class="form-group">
+            <label for="secret">Зашифрованный текст (base64):</label>
+            <textarea id="secret" v-model="secret" rows="5"></textarea>
+        </div>
+
+        <button @click="decrypt">Расшифровать</button>
+
+        <div v-if="result" id="result">
+            <h3>Результат:</h3>
+            <div v-if="error" class="error">{{ error }}</div>
+            <pre v-else>{{ result }}</pre>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+
+        createApp({
+            setup() {
+                const secret = ref('');
+                const result = ref('');
+                const error = ref('');
+                const keyFile = ref(null);
+
+                const handleFileUpload = (event) => {
+                    keyFile.value = event.target.files[0];
+                };
+
+                const decrypt = async () => {
+                    if (!keyFile.value || !secret.value) {
+                        error.value = "Загрузите ключ и введите зашифрованный текст";
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('key', keyFile.value);
+                    formData.append('secret', secret.value);
+
+                    try {
+                        const response = await fetch('/decypher', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            result.value = data.decrypted;
+                            error.value = '';
+                        } else {
+                            throw new Error(data.error || "Ошибка дешифровки");
+                        }
+                    } catch (err) {
+                        error.value = err.message;
+                        result.value = '';
+                    }
+                };
+
+                return { secret, result, error, handleFileUpload, decrypt };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
