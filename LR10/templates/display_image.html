@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Image</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; }
+        .image-container { margin: 20px 0; }
+        img { max-width: 100%; border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .links { margin-top: 20px; }
+        a { color: #4CAF50; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Your Generated Image</h1>
+
+    <div class="image-container">
+        <!-- Отображение через base64 -->
+        <img src="data:image/jpeg;base64,{{ img_data }}" alt="Generated Image">
+
+        <!-- Альтернативно: отображение через URL -->
+        <!-- <img src="{{ img_url }}" alt="Generated Image"> -->
+    </div>
+
+    <div class="image-info">
+        <p>Right-click the image to save it.</p>
+    </div>
+
+    <div class="links">
+        <a href="/makeimage">Generate another image</a>
+    </div>
+</body>
+</html>
