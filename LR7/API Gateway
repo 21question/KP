@@ -1,0 +1,13 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+servers:
+- url: https://d5dlnb71iejvv7n5cguh.laqt4bj7.apigw.yandexcloud.net
+paths:
+  /:
+    post:
+      x-yc-apigateway-integration:
+        type: cloud_functions
+        function_id: d4ej3pufmj6agggj8jts
+      operationId: tgbot
