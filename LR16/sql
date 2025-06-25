@@ -1,0 +1,29 @@
+-- Создание таблицы книг
+CREATE TABLE books (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Создание таблицы филиалов
+CREATE TABLE branches (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Создание таблицы запасов
+CREATE TABLE stock (
+    book_id INTEGER REFERENCES books(id),
+    branch_id INTEGER REFERENCES branches(id),
+    quantity INTEGER NOT NULL CHECK (quantity >= 0),
+    PRIMARY KEY (book_id, branch_id)
+);
+
+-- Создание таблицы перемещений
+CREATE TABLE movements (
+    id SERIAL PRIMARY KEY,
+    book_id INTEGER REFERENCES books(id),
+    quantity INTEGER NOT NULL,
+    from_branch_id INTEGER REFERENCES branches(id),
+    to_branch_id INTEGER REFERENCES branches(id),
+    movement_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
